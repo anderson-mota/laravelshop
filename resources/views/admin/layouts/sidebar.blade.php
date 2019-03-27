@@ -13,6 +13,19 @@
                         <i class="fas fa-bar-chart-o"></i>Dashboard
                     </a>
                 </li>
+
+                <li class="has-sub">
+                    <a class="js-arrow" href="#">
+                        <i class="fas fa-calendar-alt"></i>Productos</a>
+                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                        <li>
+                            <a href="{{ route('admin.productos.index') }}">Listar</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.productos.crear') }}">Crear</a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </nav>
     </div>
