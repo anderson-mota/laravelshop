@@ -9,7 +9,7 @@
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>Dashboard</title>
+    <title>{{$titulo}}</title>
 
     <!-- Fontfaces CSS-->
     <link href="{{asset('public/css/font-face.css')}}" rel="stylesheet" media="all">

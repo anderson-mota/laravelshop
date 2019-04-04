@@ -23,6 +23,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('admin.dashboard.index');
+        $titulo = 'LaravelShop | Productos - Dashboard';
+
+		return view('admin.dashboard.index')->with([
+            'titulo'    => $titulo,
+        ]);
     }
 }
