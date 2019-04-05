@@ -57,7 +57,7 @@
                             </div>
                         @endif
                         <div class="user-data__footer">
-                            {{-- {{$inscricoes->render()}} --}}
+                            {{$productos->render()}}
                         </div>
                     </div>
                 </div>
