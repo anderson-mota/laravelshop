@@ -17,7 +17,11 @@ class ProductosController extends Controller{
     }
 
     public function crear(){
+        $titulo = 'LaravelShop | Productos - Crear';
 
+		return view('admin.productos.crear')->with([
+            'titulo'    => $titulo,
+        ]);
     }
 
     public function grabar(){
