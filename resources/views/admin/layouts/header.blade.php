@@ -9,7 +9,8 @@
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>{{$titulo}}</title>
+    {{-- <title>{{!isset($titulo) ?: 'LaravelShop'}}</title> --}}
+    <title>{{( !isset($titulo)) ? ("Dashboard") : ($titulo)}}</title>
 
     <!-- Fontfaces CSS-->
     <link href="{{asset('public/css/font-face.css')}}" rel="stylesheet" media="all">
