@@ -47,8 +47,21 @@ services:
       working_dir: /app
       volumes:
         - .:/app
+      depends_on:
+        - php-fpm
       command: composer install && tail -f /dev/null
       tty: true
+
+    application:
+      image: phpdockerio/php71-fpm:latest
+      container_name: laravel-shop-application
+      working_dir: /application
+      volumes:
+        - .:/application
+      depends_on:
+        - composer
+        - mysql
+      entrypoint: cp .env.example .env && php artisan migrate && php artisan db:seed
 
     front:
       image: node:8-alpine
