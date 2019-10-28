@@ -1,6 +1,6 @@
 version: "3.1"
-services:
 
+services:
     memcached:
       image: memcached:alpine
       container_name: laravel-shop-memcached
@@ -12,61 +12,51 @@ services:
     mysql:
       image: mysql:8.0
       container_name: laravel-shop-mysql
-      working_dir: /application
-      volumes:
-        - .:/application
+      restart: always
       environment:
-        - MYSQL_ROOT_PASSWORD=1234
-        - MYSQL_DATABASE=homestead
-        - MYSQL_USER=homestead
-        - MYSQL_PASSWORD=secret
-      ports:
-        - "8082:3306"
+        MYSQL_ROOT_PASSWORD: q1w2e3r4
+        MYSQL_DATABASE: homestead
+        MYSQL_USER: homestead
+        MYSQL_PASSWORD: secret
+      volumes:
+        - ./data:/var/lib/mysql
+      expose:
+        - 3306
+      command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci','--default-authentication-plugin=mysql_native_password']
+
+    php-fpm:
+      build:
+        context: ./
+        dockerfile: docker_php/php-fpm/Dockerfile
+      container_name: laravel-shop-php-fpm
+      working_dir: /var/www/html
+      volumes:
+        - .:/var/www/html
+        - ./docker_php/php-fpm/php-ini-overrides.ini:/etc/php/7.1/fpm/conf.d/99-overrides.ini
+      depends_on:
+        - mysql
+      tty: true
 
     webserver:
       image: nginx:alpine
       container_name: laravel-shop-webserver
-      working_dir: /application
-      volumes:
-          - .:/application
-          - ./phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-      ports:
-       - "8080:80"
-
-    php-fpm:
-      build: phpdocker/php-fpm
-      container_name: laravel-shop-php-fpm
-      working_dir: /application
-      volumes:
-        - .:/application
-        - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.1/fpm/conf.d/99-overrides.ini
-
-    composer:
-      image: composer
-      container_name: laravel-shop-composer
-      working_dir: /app
-      volumes:
-        - .:/app
       depends_on:
         - php-fpm
-      command: composer install && tail -f /dev/null
+      volumes:
+        - ./docker_php/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      ports:
+        - "8080:80"
+
+    composer:
+      build:
+        context: ./
+        dockerfile: docker_composer/Dockerfile
+      container_name: laravel-shop-composer
       tty: true
 
-    application:
-      image: phpdockerio/php71-fpm:latest
-      container_name: laravel-shop-application
-      working_dir: /application
-      volumes:
-        - .:/application
-      depends_on:
-        - composer
-        - mysql
-      entrypoint: cp .env.example .env && php artisan migrate && php artisan db:seed
-
     front:
-      image: node:8-alpine
-      working_dir: /root
-      volumes:
-        - .:/root
-      command: npm install && yarn install && tail -f /dev/null
+      build:
+        context: ./
+        dockerfile: docker_node/Dockerfile
+      container_name: laravel-shop-front
       tty: true
